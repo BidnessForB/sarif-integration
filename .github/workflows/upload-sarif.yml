@@ -23,7 +23,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Archive code coverage results
+      - name: Persist the output SARIF file
         uses: actions/upload-artifact@v2
         with:
           name: sarif-output-file
