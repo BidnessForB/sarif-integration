@@ -42,16 +42,11 @@ jobs:
         run: | 
           printf ".\ntrue\nfalse" | ./lw-scanner config data
           ./lw-scanner image evaluate bryancross test-image -d . -t ${{ secrets.LW_ACCESS_TOKEN }} -n ${{ secrets.LW_ACCOUNT_NAME }} 
+          mv $(find ./evaluations -type f -name 'evaluation*')  lw-scan-output.json
 
       - name: Transform results to SARIF
         run: | 
-          npm run convert -- -s $(find ./evaluations -type f -name 'evaluation*') 
-
-      - name: Persist the output SARIF file
-        uses: actions/upload-artifact@v2
-        with:
-          name: sarif-output-file
-          path: $(find ./evaluations -type f -name 'evaluation*') 
+          npm run convert -- -s ./lw-scan-output.json
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v1
@@ -60,6 +55,13 @@ jobs:
           # sarif_file: ./SARIF-examples/SARIF-minimal.sarif.json
           #sarif_file: ./SARIF-examples/SARIF-complete.sarif.json
           sarif_file: ./report.sarif.json
+
+      - name: Persist the output SARIF file
+        uses: actions/upload-artifact@v2
+        with:
+          name: sarif-output-file
+          path: ./report.sarif.json
+          
 
       - name: Check for vulnerabilities
         id: vuln-check
