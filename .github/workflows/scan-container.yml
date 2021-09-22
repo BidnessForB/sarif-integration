@@ -34,24 +34,24 @@ jobs:
   
       - name: Download lw-scanner
         run: |
-          sudo curl -LJO https://github.com/lacework/lacework-vulnerability-scanner/releases/download/v0.1.2/lw-scanner-linux-amd64
+          sudo curl -LJO https://github.com/lacework/lacework-vulnerability-scanner/releases/download/v0.2.0/lw-scanner-linux-amd64
           sudo mv lw-scanner-linux-amd64 lw-scanner
           sudo chmod +x lw-scanner
 
       - name: Scan image
         run: | 
           printf ".\ntrue\nfalse" | ./lw-scanner config data
-          ./lw-scanner image evaluate bryancross test-image -t ${{ secrets.LW_ACCESS_TOKEN }} -n ${{ secrets.LW_ACCOUNT_NAME }} 
+          ./lw-scanner image evaluate bryancross test-image -d . -t ${{ secrets.LW_ACCESS_TOKEN }} -n ${{ secrets.LW_ACCOUNT_NAME }} 
 
       - name: Transform results to SARIF
         run: | 
-          npm run convert -- -s $(find . -type f -name 'evaluation*') 
+          npm run convert -- -s $(find ./evaluations -type f -name 'evaluation*') 
 
       - name: Persist the output SARIF file
         uses: actions/upload-artifact@v2
         with:
           name: sarif-output-file
-          path: ./report.sarif.json
+          path: $(find ./evaluations -type f -name 'evaluation*') 
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v1
