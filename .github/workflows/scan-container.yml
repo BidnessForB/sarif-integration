@@ -41,7 +41,7 @@ jobs:
       - name: Scan image
         run: | 
           printf ".\ntrue\nfalse" | ./lw-scanner config data
-          ./lw-scanner evaluate bryancross test-image -t ${{ secrets.LW_ACCESS_TOKEN }} -n ${{ secrets.LW_ACCOUNT_NAME }} 
+          ./lw-scanner image evaluate bryancross test-image -t ${{ secrets.LW_ACCESS_TOKEN }} -n ${{ secrets.LW_ACCOUNT_NAME }} 
 
       - name: Transform results to SARIF
         run: | 
