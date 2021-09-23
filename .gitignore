@@ -1,12 +1,14 @@
-#outputs
+#outputs, scratch data, notes, etc.
 evaluations
 lw-scanner-output
+jq-queries/jq-queries.jq
 
 #Mac shit
 .DS_Store
 
 #VSCode
 *.code-workspace
+.vscode
 
 
 # Logs
