@@ -66,27 +66,27 @@ jobs:
           name: lw-scanner-output
           path: ./lw-scan-output.json
 
+
       - name: Check for vulnerabilities
         id: vuln-check
         run: | 
-          export VULNS=$(jq .high_vulnerabilities $(find . -type f -name 'evaluation*'))
-          echo ::set-output name=vulns::$VULNS
-          echo VULNS
-          echo $VULNS
+        export RESULTS=$(jq -f ./jq-queries/jq-get-vuln-data-labels.jq lw-scan-output.json)  
+        export EXIT_CODE=$(node assess-results.js ${{ github.event.inputs.threshold }} $RESULTS)
+        echo ::set-output name=exit-code::$EXIT_CODE
 
       - name: Output results to workflow console
-        if: ${{ steps.vuln-check.outputs.vulns > 0 }}
+        if: ${{ steps.vuln-check.outputs.exit-code != 0 }}
         run: | 
-          echo "Build failed: Lacework found High Severity vulnerabilities"
-          echo "Details: " $VULNS " critical/high vulnerabilities detected."
+          echo "Build failed: Lacework found vulnerabilities exceeding configured threshold"
+          #echo "Details: " $VULNS " critical/high vulnerabilities detected."
           #This seems to be the only way to get the JQ output pretty printed
-          jq -f message.jq $(find . -type f -name 'evaluation*') 
+          
 
       #Make this configurable
       - name: Fail if high severity vulnerabilities found
-        if: ${{ steps.vuln-check.outputs.vulns > 0 }}
+        if: ${{ steps.vuln-check.outputs.vulns != 0 }}
         uses: actions/github-script@v3
         with:
           script: | 
-            core.setFailed("Critical/High vulnerabilities found!")          
+            core.setFailed("Too many vulnerabilities found!")          
 
