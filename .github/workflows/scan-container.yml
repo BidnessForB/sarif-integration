@@ -76,7 +76,8 @@ jobs:
         id: vuln-check
         run: | 
         export RESULTS=$(jq -f ./jq-queries/jq-get-vuln-data-labels.jq lw-scan-output.json)  
-        export EXIT_CODE=$(node assess-results.js ${{ github.event.inputs.threshold }} ${RESULTS} )
+        export THRESHOLD=${{ github.event.inputs.threshold }}
+        export EXIT_CODE=$(node assess-results.js $THRESHOLD $RESULTS )
         echo ::set-output name=exit-code::$EXIT_CODE
 
       - name: Output results to workflow console
