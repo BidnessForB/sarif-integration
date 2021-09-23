@@ -5,6 +5,11 @@ on:
   repository_dispatch:
     types: [scan]
   workflow_dispatch:
+    inputs:
+      threshold:
+        description: 'How many alerts to allow'
+        default: '{\n \"critical\": 1,\n \"high\": 25,\n \"medium\": 114,\n \"low\": 147,\n \"info\": 397,\n \"total\": 684\n}'
+        required: true
   pull_request:
     branches: [main]
     paths:
