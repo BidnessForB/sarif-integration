@@ -78,7 +78,7 @@ jobs:
         if: ${{ steps.vuln-check.outputs.exit-code != 0 }}
         run: | 
           echo "Build failed: Lacework found vulnerabilities exceeding configured threshold"
-          #echo "Details: " $VULNS " critical/high vulnerabilities detected."
+          echo $(jq -f ./jq-queries/jq-get-vuln-data-labels.jq lw-scan-output.json)
           #This seems to be the only way to get the JQ output pretty printed
           
 
