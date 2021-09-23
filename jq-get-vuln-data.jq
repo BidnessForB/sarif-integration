@@ -1,1 +1,0 @@
-[.critical_vulnerabilities,.high_vulnerabilities,.medium_vulnerabilities,.low_vulnerabilities,.info_vulnerabilities,.total_vulnerabilities ]

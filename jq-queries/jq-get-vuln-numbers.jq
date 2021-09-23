@@ -1,0 +1,1 @@
+[(.critical_vulnerabilities|tonumber),(.high_vulnerabilities|tonumber),(.medium_vulnerabilities|tonumber),(.low_vulnerabilities|tonumber),(.info_vulnerabilities|tonumber) ]
