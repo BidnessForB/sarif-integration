@@ -5,6 +5,11 @@ on:
   repository_dispatch:
     types: [scan]
   workflow_dispatch:
+    inputs:
+      threshold:
+        description: 'How many alerts to allow'
+        default: '{\n \"critical\": 1,\n \"high\": 25,\n \"medium\": 114,\n \"low\": 147,\n \"info\": 397,\n \"total\": 684\n}'
+        required: true
   pull_request:
     branches: [main]
     paths:
@@ -66,27 +71,28 @@ jobs:
           name: lw-scanner-output
           path: ./lw-scan-output.json
 
-      - name: Check for vulnerabilities
-        id: vuln-check
-        run: | 
-          export VULNS=$(jq .high_vulnerabilities $(find . -type f -name 'evaluation*'))
-          echo ::set-output name=vulns::$VULNS
-          echo VULNS
-          echo $VULNS
 
-      - name: Output results to workflow console
-        if: ${{ steps.vuln-check.outputs.vulns > 0 }}
-        run: | 
-          echo "Build failed: Lacework found High Severity vulnerabilities"
-          echo "Details: " $VULNS " critical/high vulnerabilities detected."
-          #This seems to be the only way to get the JQ output pretty printed
-          jq -f message.jq $(find . -type f -name 'evaluation*') 
+      # - name: Check for vulnerabilities
+      #   id: vuln-check
+      #   run: | 
+      #   export RESULTS=$(jq -f ./jq-queries/jq-get-vuln-data-labels.jq lw-scan-output.json)  
+      #   export THRESHOLD=${{ github.event.inputs.threshold }}
+      #   export EXIT_CODE=$(node assess-results.js $(THRESHOLD) $(RESULTS) )
+      #   echo ::set-output name=exit-code::$EXIT_CODE
 
-      #Make this configurable
-      - name: Fail if high severity vulnerabilities found
-        if: ${{ steps.vuln-check.outputs.vulns > 0 }}
-        uses: actions/github-script@v3
-        with:
-          script: | 
-            core.setFailed("Critical/High vulnerabilities found!")          
+      # - name: Output results to workflow console
+      #   if: ${{ steps.vuln-check.outputs.exit-code != 0 }}
+      #   run: | 
+      #     echo "Build failed: Lacework found vulnerabilities exceeding configured threshold"
+      #     echo $(jq -f ./jq-queries/jq-get-vuln-data-labels.jq lw-scan-output.json)
+      #     #This seems to be the only way to get the JQ output pretty printed
+          
+
+      # #Make this configurable
+      # - name: Fail if high severity vulnerabilities found
+      #   if: ${{ steps.vuln-check.outputs.vulns != 0 }}
+      #   uses: actions/github-script@v3
+      #   with:
+      #     script: | 
+      #       core.setFailed("Too many vulnerabilities found!")          
 
