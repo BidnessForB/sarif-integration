@@ -72,27 +72,27 @@ jobs:
           path: ./lw-scan-output.json
 
 
-      - name: Check for vulnerabilities
-        id: vuln-check
-        run: | 
-        export RESULTS=$(jq -f ./jq-queries/jq-get-vuln-data-labels.jq lw-scan-output.json)  
-        export THRESHOLD=${{ github.event.inputs.threshold }}
-        export EXIT_CODE=$(node assess-results.js $(THRESHOLD) $(RESULTS) )
-        echo ::set-output name=exit-code::$EXIT_CODE
+      # - name: Check for vulnerabilities
+      #   id: vuln-check
+      #   run: | 
+      #   export RESULTS=$(jq -f ./jq-queries/jq-get-vuln-data-labels.jq lw-scan-output.json)  
+      #   export THRESHOLD=${{ github.event.inputs.threshold }}
+      #   export EXIT_CODE=$(node assess-results.js $(THRESHOLD) $(RESULTS) )
+      #   echo ::set-output name=exit-code::$EXIT_CODE
 
-      - name: Output results to workflow console
-        if: ${{ steps.vuln-check.outputs.exit-code != 0 }}
-        run: | 
-          echo "Build failed: Lacework found vulnerabilities exceeding configured threshold"
-          echo $(jq -f ./jq-queries/jq-get-vuln-data-labels.jq lw-scan-output.json)
-          #This seems to be the only way to get the JQ output pretty printed
+      # - name: Output results to workflow console
+      #   if: ${{ steps.vuln-check.outputs.exit-code != 0 }}
+      #   run: | 
+      #     echo "Build failed: Lacework found vulnerabilities exceeding configured threshold"
+      #     echo $(jq -f ./jq-queries/jq-get-vuln-data-labels.jq lw-scan-output.json)
+      #     #This seems to be the only way to get the JQ output pretty printed
           
 
-      #Make this configurable
-      - name: Fail if high severity vulnerabilities found
-        if: ${{ steps.vuln-check.outputs.vulns != 0 }}
-        uses: actions/github-script@v3
-        with:
-          script: | 
-            core.setFailed("Too many vulnerabilities found!")          
+      # #Make this configurable
+      # - name: Fail if high severity vulnerabilities found
+      #   if: ${{ steps.vuln-check.outputs.vulns != 0 }}
+      #   uses: actions/github-script@v3
+      #   with:
+      #     script: | 
+      #       core.setFailed("Too many vulnerabilities found!")          
 
