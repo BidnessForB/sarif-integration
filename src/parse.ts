@@ -17,11 +17,11 @@ export function gatherLayerData(
   dockerfileName: string = 'Dockerfile',
   projectRoot: string = ".",
 ): LayerData[] {
-  core.debug(`Gathering Layer data from Dockerfile(s)`)
+  core.info(`Gathering Layer data from Dockerfile(s)`)
   const retdata: LayerData[] = []
   const results = glob.sync(`**/${dockerfileName}`, {cwd: projectRoot})
 
-  core.debug(`Dockerfiles located: ${JSON.stringify(results)}`)
+  core.info(`Dockerfiles located: ${JSON.stringify(results)}`)
   for (var i = 0; i < results.length; i++) {
     const fileLocation = `${projectRoot.replace(/\/$/, '')}/${results[i]}`
     const handle = readFileSync(fileLocation)
