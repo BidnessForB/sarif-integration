@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import {Run, ReportingDescriptor, Result} from "../typings/sarif-schema"
 import {ImageInfo, ImageLayer, ImagePackage, ImagePackageVulnerability, ScanResult} from "./interfaces"
 import {gatherLayerData, searchLayerInstructions} from './parse';
+import * as core from "@actions/core"
 
 
 const buildRuleDescriptionMarkdown = (
@@ -39,6 +40,7 @@ export default (scanResult?: string, customDockerfileName?: string, projectRoot?
     throw new Error(msg)
   }
 
+  core.debug(`Looking for report output in ${scanPath}`)
   const result: ScanResult = JSON.parse(fs.readFileSync(scanPath).toString())
   const rules: ReportingDescriptor[] = []
   const results: Result[] = []
@@ -115,5 +117,8 @@ export default (scanResult?: string, customDockerfileName?: string, projectRoot?
       report,
     ],
   }
-  fs.writeFileSync(outputLocation || process.env.SARIF_REPORT || './report.sarif.json', JSON.stringify(output, undefined, 2))
+
+  const reportLocation = outputLocation || process.env.SARIF_REPORT || './report.sarif.json'
+  core.debug(`Writing out report to ${reportLocation}`)
+  fs.writeFileSync(reportLocation, JSON.stringify(output, undefined, 2))
 }

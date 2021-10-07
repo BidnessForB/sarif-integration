@@ -2,6 +2,7 @@ import {DockerfileParser, Instruction} from 'dockerfile-ast';
 import {readFileSync} from 'fs';
 import glob from 'glob';
 import {LayerDetails} from './interfaces';
+import * as core from "@actions/core";
 
 function parseDockerfileInstructions(_location: string, handle: Buffer): Instruction[] {
   return DockerfileParser.parse(handle.toString()).getInstructions()
@@ -16,9 +17,11 @@ export function gatherLayerData(
   dockerfileName: string = 'Dockerfile',
   projectRoot: string = ".",
 ): LayerData[] {
+  core.debug(`Gathering Layer data from Dockerfile(s)`)
   const retdata: LayerData[] = []
   const results = glob.sync(`**/${dockerfileName}`, {cwd: projectRoot})
 
+  core.debug(`Dockerfiles located: ${JSON.stringify(results)}`)
   for (var i = 0; i < results.length; i++) {
     const fileLocation = `${projectRoot.replace(/\/$/, '')}/${results[i]}`
     const handle = readFileSync(fileLocation)

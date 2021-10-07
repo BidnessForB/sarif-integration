@@ -10,6 +10,7 @@ const main = async () => {
     if (!scanResult) {
       core.info(`No scan results found!`)
     } else {
+      core.info(`Running scanning process...`)
       scanner(
         scanResult,
         core.getInput("dockerfile_name"),
