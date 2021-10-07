@@ -111,4 +111,4 @@ jspm_packages/
 # TernJS port file
 .tern-port
 
-*.js
+src/*.js
