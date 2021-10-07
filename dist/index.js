@@ -12173,6 +12173,7 @@ const main = async () => {
             core.info(`No scan results found!`);
         }
         else {
+            core.info(`Running scanning process...`);
             (0, scanner_1.default)(scanResult, core.getInput("dockerfile_name"), core.getInput("projectroot"), core.getInput("outputlocation"));
         }
     }
@@ -12190,6 +12191,25 @@ main();
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -12198,12 +12218,15 @@ exports.searchLayerInstructions = exports.gatherLayerData = void 0;
 const dockerfile_ast_1 = __nccwpck_require__(989);
 const fs_1 = __nccwpck_require__(5747);
 const glob_1 = __importDefault(__nccwpck_require__(1957));
+const core = __importStar(__nccwpck_require__(2186));
 function parseDockerfileInstructions(_location, handle) {
     return dockerfile_ast_1.DockerfileParser.parse(handle.toString()).getInstructions();
 }
 function gatherLayerData(dockerfileName = 'Dockerfile', projectRoot = ".") {
+    core.debug(`Gathering Layer data from Dockerfile(s)`);
     const retdata = [];
     const results = glob_1.default.sync(`**/${dockerfileName}`, { cwd: projectRoot });
+    core.debug(`Dockerfiles located: ${JSON.stringify(results)}`);
     for (var i = 0; i < results.length; i++) {
         const fileLocation = `${projectRoot.replace(/\/$/, '')}/${results[i]}`;
         const handle = (0, fs_1.readFileSync)(fileLocation);
@@ -12266,6 +12289,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const fs = __importStar(__nccwpck_require__(5747));
 const parse_1 = __nccwpck_require__(3248);
+const core = __importStar(__nccwpck_require__(2186));
 const buildRuleDescriptionMarkdown = (image, layer, imgpackage, v) => {
     var _a;
     return `
@@ -12294,6 +12318,7 @@ exports.default = (scanResult, customDockerfileName, projectRoot, outputLocation
     if (!scanPath) {
         throw new Error(msg);
     }
+    core.debug(`Looking for report output in ${scanPath}`);
     const result = JSON.parse(fs.readFileSync(scanPath).toString());
     const rules = [];
     const results = [];
@@ -12363,7 +12388,9 @@ exports.default = (scanResult, customDockerfileName, projectRoot, outputLocation
             report,
         ],
     };
-    fs.writeFileSync(outputLocation || process.env.SARIF_REPORT || './report.sarif.json', JSON.stringify(output, undefined, 2));
+    const reportLocation = outputLocation || process.env.SARIF_REPORT || './report.sarif.json';
+    core.debug(`Writing out report to ${reportLocation} (cwd: ${process.cwd()})`);
+    fs.writeFileSync(reportLocation, JSON.stringify(output, undefined, 2));
 };
 
 
