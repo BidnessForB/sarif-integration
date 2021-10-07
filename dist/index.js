@@ -12223,10 +12223,10 @@ function parseDockerfileInstructions(_location, handle) {
     return dockerfile_ast_1.DockerfileParser.parse(handle.toString()).getInstructions();
 }
 function gatherLayerData(dockerfileName = 'Dockerfile', projectRoot = ".") {
-    core.debug(`Gathering Layer data from Dockerfile(s)`);
+    core.info(`Gathering Layer data from Dockerfile(s)`);
     const retdata = [];
     const results = glob_1.default.sync(`**/${dockerfileName}`, { cwd: projectRoot });
-    core.debug(`Dockerfiles located: ${JSON.stringify(results)}`);
+    core.info(`Dockerfiles located: ${JSON.stringify(results)}`);
     for (var i = 0; i < results.length; i++) {
         const fileLocation = `${projectRoot.replace(/\/$/, '')}/${results[i]}`;
         const handle = (0, fs_1.readFileSync)(fileLocation);
@@ -12318,7 +12318,7 @@ exports.default = (scanResult, customDockerfileName, projectRoot, outputLocation
     if (!scanPath) {
         throw new Error(msg);
     }
-    core.debug(`Looking for report output in ${scanPath}`);
+    core.info(`Looking for report output in ${scanPath}`);
     const result = JSON.parse(fs.readFileSync(scanPath).toString());
     const rules = [];
     const results = [];
@@ -12389,7 +12389,7 @@ exports.default = (scanResult, customDockerfileName, projectRoot, outputLocation
         ],
     };
     const reportLocation = outputLocation || process.env.SARIF_REPORT || './report.sarif.json';
-    core.debug(`Writing out report to ${reportLocation} (cwd: ${process.cwd()})`);
+    core.info(`Writing out report to ${reportLocation} (cwd: ${process.cwd()})`);
     fs.writeFileSync(reportLocation, JSON.stringify(output, undefined, 2));
 };
 
