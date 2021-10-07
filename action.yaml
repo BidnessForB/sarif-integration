@@ -1,0 +1,19 @@
+name: 'lw-scanner-sarif-converter'
+description: 'Convert Lacework Scanner output to SARIF format'
+author: 'BidnessForB'
+inputs:
+  dockerfile_name:
+    description: "Name of the Dockerfile used to create your image. Defaults to 'Dockerfile'"
+    required: false
+    default: "Dockerfile"
+  projectroot:
+    description: "The place to look for the source code of your project, and where the Dockerfile should be located.  Defaults to '.'"
+    required: false
+    default: "."
+  outputlocation:
+    description: "Location to output the SARIF compatible report.  Defaults to '.'"
+    required: false
+    default: "."
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
