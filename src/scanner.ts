@@ -119,6 +119,6 @@ export default (scanResult?: string, customDockerfileName?: string, projectRoot?
   }
 
   const reportLocation = outputLocation || process.env.SARIF_REPORT || './report.sarif.json'
-  core.debug(`Writing out report to ${reportLocation}`)
+  core.debug(`Writing out report to ${reportLocation} (cwd: ${process.cwd()})`)
   fs.writeFileSync(reportLocation, JSON.stringify(output, undefined, 2))
 }
