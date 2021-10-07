@@ -2,7 +2,7 @@
   "name": "sarif-testing",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.js",
+  "main": "src/action.js",
   "scripts": {
     "package": "ncc build --source-map --license licenses.txt",
     "build": "tsc -p .",

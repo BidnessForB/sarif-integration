@@ -18,10 +18,8 @@ const main = async () => {
       )
     }
   } catch (e) {
-    console.log(`Failed to run conversion! \n\n${(e as any).message}`)
-    process.exit(1)
+    core.setFailed(`Failed to run conversion! \n\n${(e as any).message}`)
   }
-
 }
 
 main()
