@@ -11,9 +11,9 @@ inputs:
     required: false
     default: "."
   outputlocation:
-    description: "Location to output the SARIF compatible report.  Defaults to '.'"
+    description: "Location to output the SARIF compatible report.  Defaults to 'report.sarif.json'"
     required: false
-    default: "."
+    default: "report.sarif.json"
 runs:
   using: 'node12'
   main: 'dist/index.js'
