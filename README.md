@@ -1,5 +1,7 @@
 ## Setup
 
+[![Git](https://app.soluble.cloud/api/v1/public/badges/ed7e478d-2e59-4653-a751-fdd5a19fc56b.svg?orgId=547292756607)](https://app.soluble.cloud/repos/details/github.com/bidnessforb/sarif-integration?orgId=547292756607)  
+
 `npm ci`
 
 ## Building
